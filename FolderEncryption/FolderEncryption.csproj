@@ -171,6 +171,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IFileEncryptionRepository.cs" />
     <Compile Include="Interfaces\IFileEncryptionService.cs" />
     <Compile Include="Migrations\20201202162410_InitialCreate.cs" />
     <Compile Include="Migrations\20201202162410_InitialCreate.designer.cs">
@@ -182,6 +183,7 @@
     <Compile Include="Models\FileEncryptionContext.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\FileEncryptionRepository.cs" />
     <Compile Include="Services\FileEncryptionService.cs" />
     <Compile Include="Startup.cs" />
     <EmbeddedResource Include="Form1.resx">

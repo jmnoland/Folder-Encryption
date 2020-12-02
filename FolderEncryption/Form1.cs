@@ -15,13 +15,11 @@ namespace FolderEncryption
 {
     public partial class Form1 : Form
     {
-        private static IServiceProvider serviceProvider;
         private IFileEncryptionService _fileEncryptionService;
 
         public Form1(IFileEncryptionService fileEncryptionService)
         {
             _fileEncryptionService = fileEncryptionService;
-            _fileEncryptionService.Test();
             InitializeComponent();
         }
 

@@ -1,5 +1,6 @@
 ﻿using FolderEncryption.Interfaces;
 using FolderEncryption.Models;
+using FolderEncryption.Repositories;
 using FolderEncryption.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,8 @@ namespace FolderEncryption
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<FileEncryptionContext>();
-            services.AddScoped<IFileEncryptionService, FileEncryptionService>();
+            services.AddSingleton<IFileEncryptionService, FileEncryptionService>();
+            services.AddScoped<IFileEncryptionRepository, FileEncryptionRepository>();
         }
     }
 }

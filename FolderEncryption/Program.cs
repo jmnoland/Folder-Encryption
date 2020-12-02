@@ -1,5 +1,6 @@
 ﻿using FolderEncryption.Interfaces;
 using FolderEncryption.Models;
+using FolderEncryption.Repositories;
 using FolderEncryption.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -38,6 +39,7 @@ namespace FolderEncryption
                 .AddDbContext<FileEncryptionContext>()
                 .AddScoped<Form1>()
                 .AddScoped<IFileEncryptionService, FileEncryptionService>()
+                .AddScoped<IFileEncryptionRepository, FileEncryptionRepository>()
                 .BuildServiceProvider();
         }
     }
