@@ -8,6 +8,6 @@ namespace FolderEncryption.Interfaces
 {
     public interface IFileEncryptionService
     {
-        void Test();
+
     }
 }

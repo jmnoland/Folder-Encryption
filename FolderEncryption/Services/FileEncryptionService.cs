@@ -10,27 +10,44 @@ namespace FolderEncryption.Services
 {
     public class FileEncryptionService : IFileEncryptionService
     {
-        private FileEncryptionContext _dbContext;
-
-        public FileEncryptionService(FileEncryptionContext dbContext)
+        private IFileEncryptionRepository _fileEncryptionRepository;
+        public FileEncryptionService(IFileEncryptionRepository fileEncryptionRepository)
         {
-            _dbContext = dbContext;
+            _fileEncryptionRepository = fileEncryptionRepository;
         }
 
-        public void Test()
+        public void StartThreads()
         {
-            Console.WriteLine("Test");
-            //EncryptionKey newKey = new EncryptionKey
-            //{
-            //    CreateDate = DateTime.Now.ToString(),
-            //    Directories = new List<Directory>(),
-            //    PublicKey = ""
-            //};
-            //_dbContext.Add(newKey);
-            //_dbContext.SaveChanges();
-            var test = _dbContext.EncryptionKeys.ToList();
+            var encryptionKeys = _fileEncryptionRepository.GetEncryptionKeys();
+            foreach (var key in encryptionKeys)
+            {
+                
+            }
+        }
+        private static void BeginWatching(Directory directory)
+        {
+            using (System.IO.FileSystemWatcher watcher = new System.IO.FileSystemWatcher())
+            {
+                watcher.Path = directory.Path;
 
+                watcher.NotifyFilter = System.IO.NotifyFilters.LastAccess
+                                     | System.IO.NotifyFilters.LastWrite
+                                     | System.IO.NotifyFilters.FileName
+                                     | System.IO.NotifyFilters.DirectoryName;
+
+                watcher.Changed += OnChanged;
+                watcher.Created += OnChanged;
+                watcher.Deleted += OnChanged;
+                watcher.Renamed += OnRenamed;
+
+                watcher.EnableRaisingEvents = true;
+            }
         }
 
+        private static void OnChanged(object source, System.IO.FileSystemEventArgs e) =>
+            Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+
+        private static void OnRenamed(object source, System.IO.RenamedEventArgs e) =>
+            Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
     }
 }
