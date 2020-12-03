@@ -177,8 +177,12 @@
     <Compile Include="Migrations\20201202162410_InitialCreate.designer.cs">
       <DependentUpon>20201202162410_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20201203191638_DirectoryRenamed.cs" />
+    <Compile Include="Migrations\20201203191638_DirectoryRenamed.designer.cs">
+      <DependentUpon>20201203191638_DirectoryRenamed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\FileEncryptionContextModelSnapshot.cs" />
-    <Compile Include="Models\Directory.cs" />
+    <Compile Include="Models\Folder.cs" />
     <Compile Include="Models\EncryptionKey.cs" />
     <Compile Include="Models\FileEncryptionContext.cs" />
     <Compile Include="Program.cs" />

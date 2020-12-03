@@ -5,7 +5,7 @@ namespace FolderEncryption.Models
     public class FileEncryptionContext : DbContext
     {
         public DbSet<EncryptionKey> EncryptionKeys { get; set; }
-        public DbSet<Directory> Directories { get; set; }
+        public DbSet<Folder> Folders { get; set; }
 
         private static bool _created = false;
         public FileEncryptionContext()
@@ -21,9 +21,9 @@ namespace FolderEncryption.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Directory>()
+            modelBuilder.Entity<Folder>()
                 .HasOne(p => p.Key)
-                .WithMany(b => b.Directories)
+                .WithMany(b => b.Folders)
                 .HasForeignKey(p => p.KeyId)
                 .HasPrincipalKey(b => b.KeyId);
         }

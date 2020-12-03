@@ -9,12 +9,12 @@ namespace FolderEncryption.Interfaces
 {
     public interface IFileEncryptionRepository
     {
-        List<Directory> GetDirectories();
-        List<Directory> GetDirectoriesFromKey(EncryptionKey key);
+        List<Folder> GetDirectories();
+        List<Folder> GetDirectoriesFromKey(EncryptionKey key);
         List<EncryptionKey> GetEncryptionKeys();
         void AddEncryptionKey(EncryptionKey key);
         void RemoveEncryptionKey(EncryptionKey key);
-        void AddDirectory(Directory directory);
-        void RemoveDirectory(Directory directory);
+        void AddDirectory(Folder directory);
+        void RemoveDirectory(Folder directory);
     }
 }

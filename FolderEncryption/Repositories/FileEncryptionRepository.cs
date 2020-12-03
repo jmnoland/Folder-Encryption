@@ -17,13 +17,13 @@ namespace FolderEncryption.Repositories
             _dbContext = dbContext;
         }
 
-        public List<Directory> GetDirectories()
+        public List<Folder> GetDirectories()
         {
-            return _dbContext.Directories.ToList();
+            return _dbContext.Folders.ToList();
         }
-        public List<Directory> GetDirectoriesFromKey(EncryptionKey key)
+        public List<Folder> GetDirectoriesFromKey(EncryptionKey key)
         {
-            return _dbContext.Directories.Where(w => w.KeyId == key.KeyId).ToList();
+            return _dbContext.Folders.Where(w => w.KeyId == key.KeyId).ToList();
         }
         public List<EncryptionKey> GetEncryptionKeys()
         {
@@ -39,14 +39,14 @@ namespace FolderEncryption.Repositories
             _dbContext.EncryptionKeys.Remove(key);
             await _dbContext.SaveChangesAsync();
         }
-        public async void AddDirectory(Directory directory)
+        public async void AddDirectory(Folder directory)
         {
-            _dbContext.Directories.Add(directory);
+            _dbContext.Folders.Add(directory);
             await _dbContext.SaveChangesAsync();
         }
-        public async void RemoveDirectory(Directory directory)
+        public async void RemoveDirectory(Folder directory)
         {
-            _dbContext.Directories.Remove(directory);
+            _dbContext.Folders.Remove(directory);
             await _dbContext.SaveChangesAsync();
         }
     }

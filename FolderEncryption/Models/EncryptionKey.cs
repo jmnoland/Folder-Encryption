@@ -9,6 +9,6 @@ namespace FolderEncryption.Models
         public int KeyId { get; set; }
         public string PublicKey { get; set; }
         public string CreateDate { get; set; }
-        public List<Directory> Directories { get; set; }
+        public List<Folder> Folders { get; set; }
     }
 }

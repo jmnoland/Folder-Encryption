@@ -2,7 +2,7 @@
 
 namespace FolderEncryption.Models
 {
-    public class Directory
+    public class Folder
     {
         [Key]
         public int DirectoryId { get; set; }
