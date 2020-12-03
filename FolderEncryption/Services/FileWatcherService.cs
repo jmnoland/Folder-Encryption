@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace FolderEncryption.Services
 {
-    public class FileEncryptionService : IFileEncryptionService
+    public class FileWatcherService : IFileWatcherService
     {
         private IFileEncryptionRepository _fileEncryptionRepository;
-        public FileEncryptionService(IFileEncryptionRepository fileEncryptionRepository)
+        public FileWatcherService(IFileEncryptionRepository fileEncryptionRepository)
         {
             _fileEncryptionRepository = fileEncryptionRepository;
         }

@@ -38,7 +38,8 @@ namespace FolderEncryption
             services.AddLogging()
                 .AddDbContext<FileEncryptionContext>()
                 .AddScoped<Form1>()
-                .AddSingleton<IFileEncryptionService, FileEncryptionService>()
+                .AddSingleton<IFileWatcherService, FileWatcherService>()
+                .AddScoped<IEncryptionService, EncryptionService>()
                 .AddScoped<IFileEncryptionRepository, FileEncryptionRepository>()
                 .BuildServiceProvider();
         }

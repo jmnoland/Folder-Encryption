@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FolderEncryption.Interfaces
 {
-    public interface IFileWatcherService
+    public interface IEncryptionService
     {
 
     }

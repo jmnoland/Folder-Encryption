@@ -15,9 +15,9 @@ namespace FolderEncryption
 {
     public partial class Form1 : Form
     {
-        private IFileEncryptionService _fileEncryptionService;
+        private IFileWatcherService _fileEncryptionService;
 
-        public Form1(IFileEncryptionService fileEncryptionService)
+        public Form1(IFileWatcherService fileEncryptionService)
         {
             _fileEncryptionService = fileEncryptionService;
             InitializeComponent();

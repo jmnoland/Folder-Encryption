@@ -18,7 +18,8 @@ namespace FolderEncryption
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<FileEncryptionContext>();
-            services.AddSingleton<IFileEncryptionService, FileEncryptionService>();
+            services.AddSingleton<IFileWatcherService, FileWatcherService>();
+            services.AddScoped<IEncryptionService, EncryptionService>();
             services.AddScoped<IFileEncryptionRepository, FileEncryptionRepository>();
         }
     }
