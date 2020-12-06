@@ -12,23 +12,32 @@ namespace FolderEncryption.Services
     public class FileWatcherService : IFileWatcherService
     {
         private IFileEncryptionRepository _fileEncryptionRepository;
+        private Dictionary<int, WatcherDetail> _watchers;
         public FileWatcherService(IFileEncryptionRepository fileEncryptionRepository)
         {
             _fileEncryptionRepository = fileEncryptionRepository;
+            StartWatchers();
         }
 
-        public void StartThreads()
+        public void StartWatchers()
         {
             var encryptionKeys = _fileEncryptionRepository.GetEncryptionKeys();
             foreach (var key in encryptionKeys)
             {
-                foreach(var dir in key.Folders)
+                foreach (var dir in key.Folders)
                 {
-                    BeginWatching(dir, key);
+                    WatcherDetail temp = null;
+                    _watchers.TryGetValue(dir.DirectoryId, out temp);
+
+                    // Check if key has been changed
+                    if (temp.KeyId == key.KeyId) continue;
+                    temp.Watcher.Dispose();
+
+                    _watchers.Add(dir.DirectoryId, BeginWatching(dir, key));
                 }
             }
         }
-        private static void BeginWatching(Folder directory, EncryptionKey key)
+        private static WatcherDetail BeginWatching(Folder directory, EncryptionKey key)
         {
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
@@ -45,12 +54,18 @@ namespace FolderEncryption.Services
                 watcher.Renamed += OnRenamed;
 
                 watcher.EnableRaisingEvents = true;
+
+                return new WatcherDetail
+                {
+                    KeyId = key.KeyId,
+                    Watcher = watcher
+                };
             }
         }
 
         private static void OnChanged(object source, FileSystemEventArgs e, EncryptionKey key)
         {
-
+            Console.WriteLine($"File: {e.FullPath}");
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) =>

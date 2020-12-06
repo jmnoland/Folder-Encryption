@@ -8,6 +8,6 @@ namespace FolderEncryption.Interfaces
 {
     public interface IFileWatcherService
     {
-
+        void StartWatchers();
     }
 }

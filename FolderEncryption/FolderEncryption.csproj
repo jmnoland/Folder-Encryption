@@ -186,6 +186,7 @@
     <Compile Include="Models\Folder.cs" />
     <Compile Include="Models\EncryptionKey.cs" />
     <Compile Include="Models\FileEncryptionContext.cs" />
+    <Compile Include="Models\WatcherDetail.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\FileEncryptionRepository.cs" />
