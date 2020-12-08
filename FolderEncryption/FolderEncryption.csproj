@@ -43,6 +43,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.Cryptography.Internal, Version=5.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Cryptography.Internal.5.0.1\lib\net461\Microsoft.AspNetCore.Cryptography.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation, Version=5.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Cryptography.KeyDerivation.5.0.1\lib\net461\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -181,6 +187,10 @@
     <Compile Include="Migrations\20201203191638_DirectoryRenamed.cs" />
     <Compile Include="Migrations\20201203191638_DirectoryRenamed.designer.cs">
       <DependentUpon>20201203191638_DirectoryRenamed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20201208201809_AddedEncryptionKeyColumns.cs" />
+    <Compile Include="Migrations\20201208201809_AddedEncryptionKeyColumns.designer.cs">
+      <DependentUpon>20201208201809_AddedEncryptionKeyColumns.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\FileEncryptionContextModelSnapshot.cs" />
     <Compile Include="Models\Folder.cs" />

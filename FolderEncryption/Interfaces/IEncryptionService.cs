@@ -8,9 +8,9 @@ namespace FolderEncryption.Interfaces
 {
     public interface IEncryptionService
     {
-        void CreateNewKey(string containerName);
+        void CreateNewKey(string containerName, string passwordHash, string salt);
         void CreatePublicKeyFromXML(string containerName, string xmlKeyInfo);
         byte[] EncryptFile(string containerName, byte[] data);
-        byte[] DecryptFile(string containerName, byte[] data);
+        byte[] DecryptFile(string containerName, string hashPassword, string password, byte[] data);
     }
 }
