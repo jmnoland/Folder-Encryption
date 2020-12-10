@@ -24,16 +24,18 @@ namespace FolderEncryption.Services
         }
 
         #region Public methods
-        public void CreateNewKey(string containerName, string password, string salt)
+        public void CreateNewKey(string containerName, string password)
         {
             var hashPassword = HashPassword(password, _rng, KeyDerivationPrf.HMACSHA256);
             var securePasswordString = new NetworkCredential("", password).SecurePassword;
             var param = new CspParameters
             {
                 KeyContainerName = containerName,
-                KeyPassword = securePasswordString
+                KeyPassword = securePasswordString,
+                ProviderType = 1,
+                ProviderName = "RSA"
             };
-            using(var rsa = new RSACryptoServiceProvider(param))
+            using (var rsa = new RSACryptoServiceProvider(param))
             {
                 _fileEncryptionRepository.AddEncryptionKey(new EncryptionKey
                 {

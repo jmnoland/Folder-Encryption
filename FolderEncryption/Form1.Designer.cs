@@ -37,14 +37,16 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.decryptFolderList = new System.Windows.Forms.ListBox();
             this.addPage = new System.Windows.Forms.TabPage();
+            this.keyNameLabel = new System.Windows.Forms.Label();
             this.passwordConfirm = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.addFolderSelectBox = new System.Windows.Forms.ListBox();
-            this.addPassword = new System.Windows.Forms.TextBox();
+            this.password = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.addNew = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.keyName = new System.Windows.Forms.TextBox();
             this.Folder.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -136,11 +138,13 @@
             // 
             // addPage
             // 
+            this.addPage.Controls.Add(this.keyName);
+            this.addPage.Controls.Add(this.keyNameLabel);
             this.addPage.Controls.Add(this.passwordConfirm);
             this.addPage.Controls.Add(this.label3);
             this.addPage.Controls.Add(this.label2);
             this.addPage.Controls.Add(this.addFolderSelectBox);
-            this.addPage.Controls.Add(this.addPassword);
+            this.addPage.Controls.Add(this.password);
             this.addPage.Controls.Add(this.label1);
             this.addPage.Controls.Add(this.addNew);
             this.addPage.Location = new System.Drawing.Point(4, 22);
@@ -151,9 +155,18 @@
             this.addPage.Text = "Add folder";
             this.addPage.UseVisualStyleBackColor = true;
             // 
+            // keyNameLabel
+            // 
+            this.keyNameLabel.AutoSize = true;
+            this.keyNameLabel.Location = new System.Drawing.Point(17, 12);
+            this.keyNameLabel.Name = "keyNameLabel";
+            this.keyNameLabel.Size = new System.Drawing.Size(35, 13);
+            this.keyNameLabel.TabIndex = 7;
+            this.keyNameLabel.Text = "Name";
+            // 
             // passwordConfirm
             // 
-            this.passwordConfirm.Location = new System.Drawing.Point(20, 73);
+            this.passwordConfirm.Location = new System.Drawing.Point(20, 117);
             this.passwordConfirm.Name = "passwordConfirm";
             this.passwordConfirm.Size = new System.Drawing.Size(100, 20);
             this.passwordConfirm.TabIndex = 6;
@@ -161,7 +174,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 56);
+            this.label3.Location = new System.Drawing.Point(17, 100);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(90, 13);
             this.label3.TabIndex = 5;
@@ -184,17 +197,17 @@
             this.addFolderSelectBox.Size = new System.Drawing.Size(658, 108);
             this.addFolderSelectBox.TabIndex = 3;
             // 
-            // addPassword
+            // password
             // 
-            this.addPassword.Location = new System.Drawing.Point(20, 29);
-            this.addPassword.Name = "addPassword";
-            this.addPassword.Size = new System.Drawing.Size(100, 20);
-            this.addPassword.TabIndex = 2;
+            this.password.Location = new System.Drawing.Point(20, 73);
+            this.password.Name = "password";
+            this.password.Size = new System.Drawing.Size(100, 20);
+            this.password.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 12);
+            this.label1.Location = new System.Drawing.Point(17, 56);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 1;
@@ -208,11 +221,18 @@
             this.addNew.TabIndex = 0;
             this.addNew.Text = "Add";
             this.addNew.UseVisualStyleBackColor = true;
-            this.addNew.Click += new System.EventHandler(this.button1_Click);
+            this.addNew.Click += new System.EventHandler(this.AddNewKey);
             // 
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
+            // 
+            // keyName
+            // 
+            this.keyName.Location = new System.Drawing.Point(20, 29);
+            this.keyName.Name = "keyName";
+            this.keyName.Size = new System.Drawing.Size(100, 20);
+            this.keyName.TabIndex = 8;
             // 
             // Form1
             // 
@@ -253,10 +273,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox addFolderSelectBox;
-        private System.Windows.Forms.TextBox addPassword;
+        private System.Windows.Forms.TextBox password;
         private System.Windows.Forms.ListBox decryptFolderList;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.ListBox encryptedFolderList;
+        private System.Windows.Forms.Label keyNameLabel;
+        private System.Windows.Forms.TextBox keyName;
     }
 }
 

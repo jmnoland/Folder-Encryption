@@ -15,11 +15,11 @@ namespace FolderEncryption
 {
     public partial class Form1 : Form
     {
-        private IFileWatcherService _fileEncryptionService;
+        private IEncryptionService _encryptionService;
 
-        public Form1(IFileWatcherService fileEncryptionService)
+        public Form1(IEncryptionService encryptionService)
         {
-            _fileEncryptionService = fileEncryptionService;
+            _encryptionService = encryptionService;
             InitializeComponent();
         }
 
@@ -28,9 +28,17 @@ namespace FolderEncryption
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void AddNewKey(object sender, EventArgs e)
         {
-
+            var password = this.password.Text;
+            var password2 = this.passwordConfirm.Text;
+            if (password != password2)
+            {
+                this.errorProvider1.SetError(this, "password doesnt match");
+                return;
+            }
+            var name = this.keyName.Text;
+            _encryptionService.CreateNewKey(name, password);
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
