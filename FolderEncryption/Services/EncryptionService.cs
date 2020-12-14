@@ -33,7 +33,8 @@ namespace FolderEncryption.Services
                 KeyContainerName = containerName,
                 KeyPassword = securePasswordString,
                 ProviderType = 1,
-                ProviderName = "RSA"
+                ProviderName = "Microsoft Base Smart Card Crypto Provider"
+                //Flags = CspProviderFlags.UseNonExportableKey | CspProviderFlags.UseUserProtectedKey
             };
             using (var rsa = new RSACryptoServiceProvider(param))
             {
