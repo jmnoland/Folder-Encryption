@@ -27,7 +27,20 @@ namespace FolderEncryption.Repositories
         }
         public List<EncryptionKey> GetEncryptionKeys()
         {
-            return _dbContext.EncryptionKeys.ToList();
+            return _dbContext.EncryptionKeys
+                .Join(_dbContext.Folders,
+                    e => e.KeyId,
+                    f => f.KeyId,
+                    (e, f) => new EncryptionKey
+                    {
+                        KeyId = e.KeyId,
+                        Password = e.Password,
+                        PublicKey = e.PublicKey,
+                        PublicKeyName = e.PublicKeyName,
+                        CreateDate = e.CreateDate,
+                        Folders = new List<Folder> { f },
+                    })
+                .ToList();
         }
         public async void AddEncryptionKey(EncryptionKey key)
         {

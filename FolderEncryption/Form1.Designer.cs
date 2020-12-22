@@ -33,9 +33,17 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.encryptedFolderList = new System.Windows.Forms.ListBox();
+            this.encryptFileList = new System.Windows.Forms.ListView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.decryptFolderList = new System.Windows.Forms.ListBox();
+            this.fileInfoKeyName = new System.Windows.Forms.Label();
+            this.fileInfoKeyLabel = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.selectDecryptFolder = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.decryptBtn = new System.Windows.Forms.Button();
+            this.decryptFileList = new System.Windows.Forms.ListBox();
             this.addPage = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.pathTextLabel = new System.Windows.Forms.Label();
@@ -48,14 +56,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.addNew = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.decryptPassword = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.Folder.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.addPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -93,6 +105,10 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.encryptedFolderList);
             this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.encryptFileList);
             this.splitContainer1.Size = new System.Drawing.Size(786, 417);
             this.splitContainer1.SplitterDistance = 262;
             this.splitContainer1.TabIndex = 0;
@@ -104,6 +120,19 @@
             this.encryptedFolderList.Name = "encryptedFolderList";
             this.encryptedFolderList.Size = new System.Drawing.Size(259, 407);
             this.encryptedFolderList.TabIndex = 0;
+            this.encryptedFolderList.SelectedIndexChanged += new System.EventHandler(this.encryptedFolderList_SelectedIndexChanged);
+            // 
+            // encryptFileList
+            // 
+            this.encryptFileList.FullRowSelect = true;
+            this.encryptFileList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.encryptFileList.HideSelection = false;
+            this.encryptFileList.Location = new System.Drawing.Point(3, 3);
+            this.encryptFileList.Name = "encryptFileList";
+            this.encryptFileList.Size = new System.Drawing.Size(512, 407);
+            this.encryptFileList.TabIndex = 0;
+            this.encryptFileList.UseCompatibleStateImageBehavior = false;
+            this.encryptFileList.View = System.Windows.Forms.View.Details;
             // 
             // tabPage2
             // 
@@ -125,6 +154,18 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.decryptFolderList);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.decryptPassword);
+            this.splitContainer2.Panel2.Controls.Add(this.label6);
+            this.splitContainer2.Panel2.Controls.Add(this.fileInfoKeyName);
+            this.splitContainer2.Panel2.Controls.Add(this.fileInfoKeyLabel);
+            this.splitContainer2.Panel2.Controls.Add(this.button2);
+            this.splitContainer2.Panel2.Controls.Add(this.selectDecryptFolder);
+            this.splitContainer2.Panel2.Controls.Add(this.label5);
+            this.splitContainer2.Panel2.Controls.Add(this.decryptBtn);
+            this.splitContainer2.Panel2.Controls.Add(this.decryptFileList);
             this.splitContainer2.Size = new System.Drawing.Size(786, 417);
             this.splitContainer2.SplitterDistance = 262;
             this.splitContainer2.TabIndex = 0;
@@ -132,10 +173,73 @@
             // decryptFolderList
             // 
             this.decryptFolderList.FormattingEnabled = true;
-            this.decryptFolderList.Location = new System.Drawing.Point(3, 3);
+            this.decryptFolderList.Location = new System.Drawing.Point(0, 3);
             this.decryptFolderList.Name = "decryptFolderList";
-            this.decryptFolderList.Size = new System.Drawing.Size(256, 407);
+            this.decryptFolderList.Size = new System.Drawing.Size(259, 407);
             this.decryptFolderList.TabIndex = 0;
+            this.decryptFolderList.SelectedIndexChanged += new System.EventHandler(this.decryptFolderList_SelectedIndexChanged);
+            // 
+            // fileInfoKeyName
+            // 
+            this.fileInfoKeyName.AutoSize = true;
+            this.fileInfoKeyName.Location = new System.Drawing.Point(62, 235);
+            this.fileInfoKeyName.Name = "fileInfoKeyName";
+            this.fileInfoKeyName.Size = new System.Drawing.Size(0, 13);
+            this.fileInfoKeyName.TabIndex = 15;
+            // 
+            // fileInfoKeyLabel
+            // 
+            this.fileInfoKeyLabel.AutoSize = true;
+            this.fileInfoKeyLabel.Location = new System.Drawing.Point(3, 235);
+            this.fileInfoKeyLabel.Name = "fileInfoKeyLabel";
+            this.fileInfoKeyLabel.Size = new System.Drawing.Size(57, 13);
+            this.fileInfoKeyLabel.TabIndex = 14;
+            this.fileInfoKeyLabel.Text = "Key name:";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(7, 350);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 13;
+            this.button2.Text = "Select";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.selectDecryptFolderBtn);
+            // 
+            // selectDecryptFolder
+            // 
+            this.selectDecryptFolder.AutoSize = true;
+            this.selectDecryptFolder.Location = new System.Drawing.Point(10, 330);
+            this.selectDecryptFolder.Name = "selectDecryptFolder";
+            this.selectDecryptFolder.Size = new System.Drawing.Size(0, 13);
+            this.selectDecryptFolder.TabIndex = 12;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(4, 310);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(99, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Select output folder";
+            // 
+            // decryptBtn
+            // 
+            this.decryptBtn.Location = new System.Drawing.Point(7, 387);
+            this.decryptBtn.Name = "decryptBtn";
+            this.decryptBtn.Size = new System.Drawing.Size(105, 23);
+            this.decryptBtn.TabIndex = 1;
+            this.decryptBtn.Text = "Decrypt selected";
+            this.decryptBtn.UseVisualStyleBackColor = true;
+            this.decryptBtn.Click += new System.EventHandler(this.decryptBtn_Click);
+            // 
+            // decryptFileList
+            // 
+            this.decryptFileList.FormattingEnabled = true;
+            this.decryptFileList.Location = new System.Drawing.Point(3, 3);
+            this.decryptFileList.Name = "decryptFileList";
+            this.decryptFileList.Size = new System.Drawing.Size(512, 225);
+            this.decryptFileList.TabIndex = 0;
             // 
             // addPage
             // 
@@ -194,6 +298,7 @@
             // passwordConfirm
             // 
             this.passwordConfirm.Location = new System.Drawing.Point(20, 117);
+            this.passwordConfirm.PasswordChar = '*';
             this.passwordConfirm.Name = "passwordConfirm";
             this.passwordConfirm.Size = new System.Drawing.Size(100, 20);
             this.passwordConfirm.TabIndex = 6;
@@ -220,6 +325,7 @@
             // 
             this.password.Location = new System.Drawing.Point(20, 73);
             this.password.Name = "password";
+            this.password.PasswordChar = '*';
             this.password.Size = new System.Drawing.Size(100, 20);
             this.password.TabIndex = 2;
             // 
@@ -246,6 +352,23 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // decryptPassword
+            // 
+            this.decryptPassword.Location = new System.Drawing.Point(7, 276);
+            this.decryptPassword.Name = "decryptPassword";
+            this.decryptPassword.PasswordChar = '*';
+            this.decryptPassword.Size = new System.Drawing.Size(100, 20);
+            this.decryptPassword.TabIndex = 17;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 259);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(53, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Password";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,10 +381,13 @@
             this.Folder.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.addPage.ResumeLayout(false);
@@ -292,6 +418,16 @@
         private System.Windows.Forms.TextBox keyName;
         private System.Windows.Forms.Label pathTextLabel;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListView encryptFileList;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label selectDecryptFolder;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button decryptBtn;
+        private System.Windows.Forms.ListBox decryptFileList;
+        private System.Windows.Forms.Label fileInfoKeyLabel;
+        private System.Windows.Forms.Label fileInfoKeyName;
+        private System.Windows.Forms.TextBox decryptPassword;
+        private System.Windows.Forms.Label label6;
     }
 }
 

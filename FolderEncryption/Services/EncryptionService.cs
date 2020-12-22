@@ -87,13 +87,13 @@ namespace FolderEncryption.Services
             var isValid = VerifyHashedPassword(hashPassword, password);
             if (!isValid) throw new Exception("Decryption failed: Password doesn't match");
 
-            var securePasswordString = new NetworkCredential("", password).SecurePassword;
-            var param = new CspParameters
+            _cspParams.KeyContainerName = containerName;
+            if (_appSettings.UsePassword)
             {
-                KeyContainerName = containerName,
-                KeyPassword = securePasswordString
-            };
-            using (var rsaKey = new RSACryptoServiceProvider(param))
+                var securePasswordString = new NetworkCredential("", password).SecurePassword;
+                _cspParams.KeyPassword = securePasswordString;
+            }
+            using (var rsaKey = new RSACryptoServiceProvider(_cspParams))
             {
                 RSACryptoServiceProvider publicKey = null;
                 _publicKeys.TryGetValue(containerName, out publicKey);
