@@ -22,8 +22,9 @@ namespace FolderEncryption.Services
                                  AppSettings appSettings)
         {
             _fileEncryptionRepository = fileEncryptionRepository;
-            _padding = RSAEncryptionPadding.OaepSHA512;
+            _padding = RSAEncryptionPadding.OaepSHA1;
             _rng = RandomNumberGenerator.Create();
+            _publicKeys = new Dictionary<string, RSACryptoServiceProvider>();
             _appSettings = appSettings;
             _cspParams = new CspParameters
             {
@@ -52,7 +53,7 @@ namespace FolderEncryption.Services
 
             using (var rsa = new RSACryptoServiceProvider(_cspParams))
             {
-                var folder = new Folder 
+                var folder = new Folder
                 {
                     Path = path
                 };
@@ -67,8 +68,18 @@ namespace FolderEncryption.Services
             }
         }
 
+        public void RemoveKey(string containerName)
+        {
+            _cspParams.KeyContainerName = containerName;
+            using (var rsaKey = new RSACryptoServiceProvider(_cspParams))
+            {
+                rsaKey.PersistKeyInCsp = false;
+            }
+        }
+
         public void CreatePublicKeyFromXML(string containerName, string xmlKeyInfo)
         {
+            if (_publicKeys.ContainsKey(containerName)) return;
             var publicKey = new RSACryptoServiceProvider();
             publicKey.FromXmlString(xmlKeyInfo);
             _publicKeys.Add(containerName, publicKey);

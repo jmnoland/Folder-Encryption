@@ -12,11 +12,13 @@ namespace FolderEncryption.Services
     public class FileWatcherService : IFileWatcherService
     {
         private IFileEncryptionRepository _fileEncryptionRepository;
-        private Dictionary<int, WatcherDetail> _watchers;
-        public FileWatcherService(IFileEncryptionRepository fileEncryptionRepository)
+        private IEncryptionService _encryptionService;
+        private Dictionary<int, WatcherDetail> _watchers = new Dictionary<int, WatcherDetail>();
+        public FileWatcherService(IFileEncryptionRepository fileEncryptionRepository,
+                                  IEncryptionService encryptionService)
         {
             _fileEncryptionRepository = fileEncryptionRepository;
-            StartWatchers();
+            _encryptionService = encryptionService;
         }
 
         public void StartWatchers()
@@ -30,28 +32,27 @@ namespace FolderEncryption.Services
                     _watchers.TryGetValue(dir.DirectoryId, out temp);
 
                     // Check if key has been changed
-                    if (temp.KeyId == key.KeyId) continue;
-                    temp.Watcher.Dispose();
+                    if (temp != null)
+                    {
+                        if (temp.KeyId == key.KeyId) continue;
+                        temp.Watcher.Dispose();
+                    }
 
-                    _watchers.Add(dir.DirectoryId, BeginWatching(dir, key));
+                    _watchers.Add(dir.DirectoryId, BeginWatching(dir, key, _encryptionService));
                 }
+                _encryptionService.CreatePublicKeyFromXML(key.PublicKeyName, key.PublicKey);
             }
         }
-        private static WatcherDetail BeginWatching(Folder directory, EncryptionKey key)
+        private static WatcherDetail BeginWatching(Folder directory, EncryptionKey key, IEncryptionService encryptionService)
         {
-            using (FileSystemWatcher watcher = new FileSystemWatcher())
+            FileSystemWatcher watcher = new FileSystemWatcher();
             {
                 watcher.Path = directory.Path;
 
-                watcher.NotifyFilter = NotifyFilters.LastAccess
-                                     | NotifyFilters.LastWrite
-                                     | NotifyFilters.FileName
-                                     | NotifyFilters.DirectoryName;
+                watcher.NotifyFilter = NotifyFilters.CreationTime |
+                                       NotifyFilters.LastWrite;
 
-                watcher.Changed += (source, e) => OnChanged(source, e, key);
-                watcher.Created += (source, e) => OnChanged(source, e, key);
-                watcher.Deleted += (source, e) => OnChanged(source, e, key);
-                watcher.Renamed += OnRenamed;
+                watcher.Created += (source, e) => OnChanged(source, e, key, encryptionService);
 
                 watcher.EnableRaisingEvents = true;
 
@@ -63,12 +64,11 @@ namespace FolderEncryption.Services
             }
         }
 
-        private static void OnChanged(object source, FileSystemEventArgs e, EncryptionKey key)
+        private static void OnChanged(object source, FileSystemEventArgs e, EncryptionKey key, IEncryptionService encryptionService)
         {
+            var data = File.ReadAllBytes(e.FullPath);
+            encryptionService.EncryptFile(key.PublicKeyName, data);
             Console.WriteLine($"File: {e.FullPath}");
         }
-
-        private static void OnRenamed(object source, RenamedEventArgs e) =>
-            Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
     }
 }
