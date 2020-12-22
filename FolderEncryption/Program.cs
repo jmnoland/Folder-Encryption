@@ -50,7 +50,7 @@ namespace FolderEncryption
                 .AddScoped<Form1>()
                 .AddSingleton(appSettings)
                 .AddSingleton<IFileWatcherService, FileWatcherService>()
-                .AddScoped<IEncryptionService, EncryptionService>()
+                .AddSingleton<IEncryptionService, EncryptionService>()
                 .AddScoped<IFileEncryptionRepository, FileEncryptionRepository>()
                 .BuildServiceProvider();
         }

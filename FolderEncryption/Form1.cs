@@ -20,20 +20,29 @@ namespace FolderEncryption
     {
         private IEncryptionService _encryptionService;
         private IFileEncryptionRepository _fileEncryptionRepository;
+        private IFileWatcherService _fileWatcherService;
 
         private string _newFilePath;
         private Dictionary<string, EncryptionKey> encryptionKeyDict;
 
         public Form1(IEncryptionService encryptionService,
-                     IFileEncryptionRepository fileEncryptionRepository)
+                     IFileEncryptionRepository fileEncryptionRepository,
+                     IFileWatcherService fileWatcherService)
         {
             _encryptionService = encryptionService;
             _fileEncryptionRepository = fileEncryptionRepository;
             encryptionKeyDict = new Dictionary<string, EncryptionKey>();
+            _fileWatcherService = fileWatcherService;
+            _fileWatcherService.StartWatchers();
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadTableData();
+        }
+
+        private void LoadTableData()
         {
             var encryptionKeys = _fileEncryptionRepository.GetEncryptionKeys();
             foreach (var key in encryptionKeys)
@@ -80,16 +89,11 @@ namespace FolderEncryption
             this.passwordConfirm.Text = "";
             this.keyName.Text = "";
             this.pathTextLabel.Text = "";
-        }
+            _fileWatcherService.StartWatchers();
 
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+            this.encryptedFolderList.Items.Clear();
+            this.decryptFolderList.Items.Clear();
+            LoadTableData();
         }
 
         private void selectFolderBtn(object sender, EventArgs e)
@@ -104,9 +108,10 @@ namespace FolderEncryption
 
         private void encryptedFolderList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.encryptFileList.Items.Clear();
             PropertyInfo pi = sender.GetType().GetProperty("SelectedItem");
             string path = (string)(pi.GetValue(sender, null));
+            if (path == null) return;
+            this.encryptFileList.Items.Clear();
             var files = ListFiles(path);
             for (int i = 0; i < files.Length; i++)
             {
@@ -118,10 +123,11 @@ namespace FolderEncryption
 
         private void decryptFolderList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.decryptFileList.Items.Clear();
-            this.fileInfoKeyName.Text = "";
             PropertyInfo pi = sender.GetType().GetProperty("SelectedItem");
             string path = (string)(pi.GetValue(sender, null));
+            if (path == null) return;
+            this.decryptFileList.Items.Clear();
+            this.fileInfoKeyName.Text = "";
             encryptionKeyDict.TryGetValue(path, out EncryptionKey val);
             this.fileInfoKeyName.Text = val.PublicKeyName;
             var files = ListFiles(path);
@@ -147,8 +153,6 @@ namespace FolderEncryption
 
             if (file == null || password == null || keyName == null || output == null) return;
 
-            //PropertyInfo pi = sender.GetType().GetProperty("SelectedItem");
-            //string path = (string)(pi.GetValue(sender, null));
             encryptionKeyDict.TryGetValue(path, out EncryptionKey val);
             var data = File.ReadAllBytes(path + "\\" + file);
             _encryptionService.DecryptFile(keyName, val.Password, password, data);

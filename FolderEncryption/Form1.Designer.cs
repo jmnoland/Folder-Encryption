@@ -37,6 +37,8 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.decryptFolderList = new System.Windows.Forms.ListBox();
+            this.decryptPassword = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.fileInfoKeyName = new System.Windows.Forms.Label();
             this.fileInfoKeyLabel = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
@@ -56,8 +58,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.addNew = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.decryptPassword = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Folder.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -104,7 +105,6 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.encryptedFolderList);
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
@@ -124,9 +124,10 @@
             // 
             // encryptFileList
             // 
+            this.encryptFileList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
             this.encryptFileList.FullRowSelect = true;
             this.encryptFileList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.encryptFileList.HideSelection = false;
             this.encryptFileList.Location = new System.Drawing.Point(3, 3);
             this.encryptFileList.Name = "encryptFileList";
             this.encryptFileList.Size = new System.Drawing.Size(512, 407);
@@ -178,6 +179,23 @@
             this.decryptFolderList.Size = new System.Drawing.Size(259, 407);
             this.decryptFolderList.TabIndex = 0;
             this.decryptFolderList.SelectedIndexChanged += new System.EventHandler(this.decryptFolderList_SelectedIndexChanged);
+            // 
+            // decryptPassword
+            // 
+            this.decryptPassword.Location = new System.Drawing.Point(7, 276);
+            this.decryptPassword.Name = "decryptPassword";
+            this.decryptPassword.PasswordChar = '*';
+            this.decryptPassword.Size = new System.Drawing.Size(100, 20);
+            this.decryptPassword.TabIndex = 17;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 259);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(53, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Password";
             // 
             // fileInfoKeyName
             // 
@@ -298,8 +316,8 @@
             // passwordConfirm
             // 
             this.passwordConfirm.Location = new System.Drawing.Point(20, 117);
-            this.passwordConfirm.PasswordChar = '*';
             this.passwordConfirm.Name = "passwordConfirm";
+            this.passwordConfirm.PasswordChar = '*';
             this.passwordConfirm.Size = new System.Drawing.Size(100, 20);
             this.passwordConfirm.TabIndex = 6;
             // 
@@ -352,22 +370,9 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // decryptPassword
+            // columnHeader1
             // 
-            this.decryptPassword.Location = new System.Drawing.Point(7, 276);
-            this.decryptPassword.Name = "decryptPassword";
-            this.decryptPassword.PasswordChar = '*';
-            this.decryptPassword.Size = new System.Drawing.Size(100, 20);
-            this.decryptPassword.TabIndex = 17;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 259);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(53, 13);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Password";
+            this.columnHeader1.Width = 508;
             // 
             // Form1
             // 
@@ -428,6 +433,7 @@
         private System.Windows.Forms.Label fileInfoKeyName;
         private System.Windows.Forms.TextBox decryptPassword;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }
 

@@ -256,7 +256,6 @@
     <Compile Include="Repositories\FileEncryptionRepository.cs" />
     <Compile Include="Services\EncryptionService.cs" />
     <Compile Include="Services\FileWatcherService.cs" />
-    <Compile Include="Startup.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
