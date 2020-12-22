@@ -2,9 +2,11 @@
 using FolderEncryption.Models;
 using FolderEncryption.Repositories;
 using FolderEncryption.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,7 +26,15 @@ namespace FolderEncryption
 
             var services = new ServiceCollection();
 
-            ConfigureServices(services);
+            AppSettings appSettings = new AppSettings();
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var configuration = builder.Build();
+            ConfigurationBinder.Bind(configuration.GetSection("AppSettings"), appSettings);
+
+            ConfigureServices(services, appSettings);
 
             using (ServiceProvider serviceProvider = services.BuildServiceProvider())
             {
@@ -33,11 +43,12 @@ namespace FolderEncryption
             }
         }
 
-        static void ConfigureServices(ServiceCollection services)
+        static void ConfigureServices(ServiceCollection services, AppSettings appSettings)
         {
             services.AddLogging()
                 .AddDbContext<FileEncryptionContext>()
                 .AddScoped<Form1>()
+                .AddSingleton(appSettings)
                 .AddSingleton<IFileWatcherService, FileWatcherService>()
                 .AddScoped<IEncryptionService, EncryptionService>()
                 .AddScoped<IFileEncryptionRepository, FileEncryptionRepository>()

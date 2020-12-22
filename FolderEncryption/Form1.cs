@@ -10,12 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace FolderEncryption
 {
     public partial class Form1 : Form
     {
         private IEncryptionService _encryptionService;
+        private string _newFilePath;
 
         public Form1(IEncryptionService encryptionService)
         {
@@ -28,8 +30,23 @@ namespace FolderEncryption
 
         }
 
+        private void SelectFilePath()
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    _newFilePath = fbd.SelectedPath;
+                    this.pathTextLabel.Text = _newFilePath;
+                }
+            }
+        }
+
         private void AddNewKey(object sender, EventArgs e)
         {
+            if (_newFilePath == null) return;
             var password = this.password.Text;
             var password2 = this.passwordConfirm.Text;
             if (password != password2)
@@ -38,7 +55,11 @@ namespace FolderEncryption
                 return;
             }
             var name = this.keyName.Text;
-            _encryptionService.CreateNewKey(name, password);
+            _encryptionService.CreateNewKey(name, password, _newFilePath);
+            this.password.Text = "";
+            this.passwordConfirm.Text = "";
+            this.keyName.Text = "";
+            this.pathTextLabel.Text = "";
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
@@ -49,6 +70,11 @@ namespace FolderEncryption
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void selectFolderBtn(object sender, EventArgs e)
+        {
+            SelectFilePath();
         }
     }
 }

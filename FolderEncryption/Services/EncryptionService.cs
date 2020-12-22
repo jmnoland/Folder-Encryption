@@ -16,34 +16,53 @@ namespace FolderEncryption.Services
         private Dictionary<string, RSACryptoServiceProvider> _publicKeys;
         private RSAEncryptionPadding _padding;
         private readonly RandomNumberGenerator _rng;
-        public EncryptionService(IFileEncryptionRepository fileEncryptionRepository)
+        private readonly AppSettings _appSettings;
+        private CspParameters _cspParams;
+        public EncryptionService(IFileEncryptionRepository fileEncryptionRepository,
+                                 AppSettings appSettings)
         {
             _fileEncryptionRepository = fileEncryptionRepository;
             _padding = RSAEncryptionPadding.OaepSHA512;
             _rng = RandomNumberGenerator.Create();
+            _appSettings = appSettings;
+            _cspParams = new CspParameters
+            {
+                ProviderName = _appSettings.EncryptionProvider
+            };
+            if (_appSettings.EncryptionProviderType != null)
+            {
+                _cspParams.ProviderType = (int)_appSettings.EncryptionProviderType;
+            }
+            if(_appSettings.EncryptionProviderFlag != null)
+            {
+                _cspParams.Flags = (CspProviderFlags)_appSettings.EncryptionProviderFlag;
+            }
         }
 
         #region Public methods
-        public void CreateNewKey(string containerName, string password)
+        public void CreateNewKey(string containerName, string password, string path)
         {
             var hashPassword = HashPassword(password, _rng, KeyDerivationPrf.HMACSHA256);
-            var securePasswordString = new NetworkCredential("", password).SecurePassword;
-            var param = new CspParameters
+            _cspParams.KeyContainerName = containerName;
+            if(_appSettings.UsePassword)
             {
-                KeyContainerName = containerName,
-                KeyPassword = securePasswordString,
-                ProviderType = 1,
-                ProviderName = "Microsoft Base Smart Card Crypto Provider"
-                //Flags = CspProviderFlags.UseNonExportableKey | CspProviderFlags.UseUserProtectedKey
-            };
-            using (var rsa = new RSACryptoServiceProvider(param))
+                var securePasswordString = new NetworkCredential("", password).SecurePassword;
+                _cspParams.KeyPassword = securePasswordString;
+            }
+
+            using (var rsa = new RSACryptoServiceProvider(_cspParams))
             {
+                var folder = new Folder 
+                {
+                    Path = path
+                };
                 _fileEncryptionRepository.AddEncryptionKey(new EncryptionKey
                 {
                     CreateDate = DateTime.Now.ToString(),
                     PublicKey = rsa.ToXmlString(false),
                     PublicKeyName = containerName,
-                    Password = hashPassword
+                    Password = hashPassword,
+                    Folders = new List<Folder> { folder }
                 });
             }
         }
