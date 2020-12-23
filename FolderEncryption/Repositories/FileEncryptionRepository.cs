@@ -37,6 +37,8 @@ namespace FolderEncryption.Repositories
                         Password = e.Password,
                         PublicKey = e.PublicKey,
                         PublicKeyName = e.PublicKeyName,
+                        EncryptedKey = e.EncryptedKey,
+                        IV = e.IV,
                         CreateDate = e.CreateDate,
                         Folders = new List<Folder> { f },
                     })
