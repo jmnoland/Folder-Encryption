@@ -245,6 +245,10 @@
     <Compile Include="Migrations\20201208201809_AddedEncryptionKeyColumns.designer.cs">
       <DependentUpon>20201208201809_AddedEncryptionKeyColumns.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20201223105506_AddedSysmeticKeyFields.cs" />
+    <Compile Include="Migrations\20201223105506_AddedSysmeticKeyFields.designer.cs">
+      <DependentUpon>20201223105506_AddedSysmeticKeyFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\FileEncryptionContextModelSnapshot.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\Folder.cs" />
