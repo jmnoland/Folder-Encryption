@@ -7,6 +7,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace FolderEncryption.Services
 {
@@ -14,10 +15,12 @@ namespace FolderEncryption.Services
     {
         private IFileEncryptionRepository _fileEncryptionRepository;
         private Dictionary<string, RSACryptoServiceProvider> _publicKeys;
+        private Dictionary<string, SymetrickeyDetail> _symetricKeys;
         private RSAEncryptionPadding _padding;
         private readonly RandomNumberGenerator _rng;
         private readonly AppSettings _appSettings;
         private CspParameters _cspParams;
+        private AesCryptoServiceProvider _aes;
         public EncryptionService(IFileEncryptionRepository fileEncryptionRepository,
                                  AppSettings appSettings)
         {
@@ -25,6 +28,8 @@ namespace FolderEncryption.Services
             _padding = RSAEncryptionPadding.OaepSHA1;
             _rng = RandomNumberGenerator.Create();
             _publicKeys = new Dictionary<string, RSACryptoServiceProvider>();
+            _symetricKeys = new Dictionary<string, SymetrickeyDetail>();
+            _aes = new AesCryptoServiceProvider();
             _appSettings = appSettings;
             _cspParams = new CspParameters
             {
@@ -53,6 +58,8 @@ namespace FolderEncryption.Services
 
             using (var rsa = new RSACryptoServiceProvider(_cspParams))
             {
+                CreateSymetricKey();
+                var encryptedKey = EncryptKey(_aes.Key, rsa);
                 var folder = new Folder
                 {
                     Path = path
@@ -62,6 +69,8 @@ namespace FolderEncryption.Services
                     CreateDate = DateTime.Now.ToString(),
                     PublicKey = rsa.ToXmlString(false),
                     PublicKeyName = containerName,
+                    EncryptedKey = encryptedKey,
+                    IV = _aes.IV,
                     Password = hashPassword,
                     Folders = new List<Folder> { folder }
                 });
@@ -77,27 +86,45 @@ namespace FolderEncryption.Services
             }
         }
 
-        public void CreatePublicKeyFromXML(string containerName, string xmlKeyInfo)
+        public void CreatePublicKeyFromXML(string containerName, string xmlKeyInfo, byte[] encryptedKey, byte[] IV)
         {
             if (_publicKeys.ContainsKey(containerName)) return;
             var publicKey = new RSACryptoServiceProvider();
             publicKey.FromXmlString(xmlKeyInfo);
             _publicKeys.Add(containerName, publicKey);
+            _symetricKeys.Add(containerName, new SymetrickeyDetail
+                { 
+                    EncryptedKey = encryptedKey,
+                    KeyIV = IV
+                }
+            );
         }
 
         public byte[] EncryptFile(string containerName, byte[] data)
         {
-            RSACryptoServiceProvider publicKey = null;
-            _publicKeys.TryGetValue(containerName, out publicKey);
-            if (publicKey == null) throw new Exception("Encryption failed: Public key not found");
-            return publicKey.Encrypt(data, _padding);
+            _cspParams.KeyContainerName = containerName;
+            using (var rsaKey = new RSACryptoServiceProvider(_cspParams))
+            {
+                RSACryptoServiceProvider publicKey = null;
+                SymetrickeyDetail aesKey = null;
+                _publicKeys.TryGetValue(containerName, out publicKey);
+                _symetricKeys.TryGetValue(containerName, out aesKey);
+                if (publicKey == null || aesKey == null)
+                {
+                    rsaKey.PersistKeyInCsp = false;
+                    throw new Exception("Encryption failed: Public key not found");
+                }
+
+                using (var decryptor = _aes.CreateEncryptor(rsaKey.Decrypt(aesKey.EncryptedKey, _padding), aesKey.KeyIV))
+                {
+                    byte[] outBlock = decryptor.TransformFinalBlock(data, 0, data.Length);
+                    return outBlock;
+                }
+            }
         }
 
         public byte[] DecryptFile(string containerName, string hashPassword, string password, byte[] data)
         {
-            var isValid = VerifyHashedPassword(hashPassword, password);
-            if (!isValid) throw new Exception("Decryption failed: Password doesn't match");
-
             _cspParams.KeyContainerName = containerName;
             if (_appSettings.UsePassword)
             {
@@ -107,9 +134,10 @@ namespace FolderEncryption.Services
             using (var rsaKey = new RSACryptoServiceProvider(_cspParams))
             {
                 RSACryptoServiceProvider publicKey = null;
+                SymetrickeyDetail aesKey = null;
                 _publicKeys.TryGetValue(containerName, out publicKey);
-
-                if (publicKey == null)
+                _symetricKeys.TryGetValue(containerName, out aesKey);
+                if (publicKey == null || aesKey == null)
                 {
                     rsaKey.PersistKeyInCsp = false;
                     throw new Exception("Decryption failed: Public key not found");
@@ -120,11 +148,31 @@ namespace FolderEncryption.Services
                     throw new Exception("Decryption failed: Doesn't match existing key");
                 }
 
-                return rsaKey.Decrypt(data, _padding);
+                using(var decryptor = _aes.CreateDecryptor(rsaKey.Decrypt(aesKey.EncryptedKey, _padding), aesKey.KeyIV))
+                {
+                    byte[] outBlock = decryptor.TransformFinalBlock(data, 0, data.Length);
+                    return outBlock;
+                }
             }
         }
         #endregion
         #region Private methods
+
+        public void CreateSymetricKey()
+        {
+            _aes.GenerateKey();
+            _aes.GenerateIV();
+        }
+
+        private byte[] EncryptKey(byte[] key, RSACryptoServiceProvider rsa)
+        {
+            return rsa.Encrypt(key, _padding);
+        }
+
+        private byte[] DecryptKey(byte[] key, RSACryptoServiceProvider rsa)
+        {
+            return rsa.Decrypt(key, _padding);
+        }
 
         // https://github.com/aspnet/Identity/blob/c7276ce2f76312ddd7fccad6e399da96b9f6fae1/src/Core/PasswordHasher.cs
         private static string HashPassword(string password, RandomNumberGenerator rng, KeyDerivationPrf prf)

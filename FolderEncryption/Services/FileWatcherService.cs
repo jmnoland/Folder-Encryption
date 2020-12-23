@@ -1,11 +1,7 @@
 ﻿using FolderEncryption.Interfaces;
 using FolderEncryption.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FolderEncryption.Services
 {
@@ -40,7 +36,7 @@ namespace FolderEncryption.Services
 
                     _watchers.Add(dir.DirectoryId, BeginWatching(dir, key, _encryptionService));
                 }
-                _encryptionService.CreatePublicKeyFromXML(key.PublicKeyName, key.PublicKey);
+                _encryptionService.CreatePublicKeyFromXML(key.PublicKeyName, key.PublicKey, key.EncryptedKey, key.IV);
             }
         }
         private static WatcherDetail BeginWatching(Folder directory, EncryptionKey key, IEncryptionService encryptionService)
@@ -50,6 +46,12 @@ namespace FolderEncryption.Services
                 watcher.Path = directory.Path;
 
                 watcher.NotifyFilter = NotifyFilters.CreationTime |
+                                       NotifyFilters.DirectoryName |
+                                       NotifyFilters.FileName |
+                                       NotifyFilters.LastAccess |
+                                       NotifyFilters.Attributes |
+                                       NotifyFilters.Size |
+                                       NotifyFilters.Security |
                                        NotifyFilters.LastWrite;
 
                 watcher.Created += (source, e) => OnChanged(source, e, key, encryptionService);
@@ -67,8 +69,8 @@ namespace FolderEncryption.Services
         private static void OnChanged(object source, FileSystemEventArgs e, EncryptionKey key, IEncryptionService encryptionService)
         {
             var data = File.ReadAllBytes(e.FullPath);
-            encryptionService.EncryptFile(key.PublicKeyName, data);
-            Console.WriteLine($"File: {e.FullPath}");
+            var encryptedData = encryptionService.EncryptFile(key.PublicKeyName, data);
+            File.WriteAllBytes(e.FullPath, encryptedData);
         }
     }
 }

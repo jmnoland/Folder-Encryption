@@ -1,15 +1,7 @@
 ﻿using FolderEncryption.Interfaces;
-using FolderEncryption.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Reflection;
 using FolderEncryption.Models;
@@ -155,7 +147,10 @@ namespace FolderEncryption
 
             encryptionKeyDict.TryGetValue(path, out EncryptionKey val);
             var data = File.ReadAllBytes(path + "\\" + file);
-            _encryptionService.DecryptFile(keyName, val.Password, password, data);
+            var decryptedData = _encryptionService.DecryptFile(keyName, val.Password, password, data);
+            File.WriteAllBytes(output + "\\" + file, decryptedData);
+            this.decryptPassword.Text = "";
+            this.selectDecryptFolder.Text = "";
         }
     }
 }

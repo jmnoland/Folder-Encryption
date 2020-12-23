@@ -249,11 +249,16 @@
     <Compile Include="Migrations\20201223105506_AddedSysmeticKeyFields.designer.cs">
       <DependentUpon>20201223105506_AddedSysmeticKeyFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20201223121046_ChangedEncryptedKeyToBytes.cs" />
+    <Compile Include="Migrations\20201223121046_ChangedEncryptedKeyToBytes.designer.cs">
+      <DependentUpon>20201223121046_ChangedEncryptedKeyToBytes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\FileEncryptionContextModelSnapshot.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\Folder.cs" />
     <Compile Include="Models\EncryptionKey.cs" />
     <Compile Include="Models\FileEncryptionContext.cs" />
+    <Compile Include="Models\SymetrickeyDetail.cs" />
     <Compile Include="Models\WatcherDetail.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
